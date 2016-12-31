@@ -11,8 +11,7 @@
 1. 导入本项目bin目录中的whutsdk-${版本号}.jar
 2. 导入项目依赖:<br>
 <pre>compile group: 'org.jsoup', name: 'jsoup', version: '1.10.1'
-compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
-</pre>
+compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'</pre>
 3. 编写代码。
 
 ##代码示例（更多代码细节参照单元测试)
