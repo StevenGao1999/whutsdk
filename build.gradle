@@ -23,6 +23,23 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
+//jar {
+//    dependsOn(clean)
+//    copy {
+//        from("build/libs/")
+//        into("bin/")
+//    }
+//}
+
+
+task release(type: Jar) {
+    dependsOn clean
+    copy {
+        from("build/libs/")
+        into("bin/")
+    }
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
