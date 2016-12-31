@@ -23,13 +23,15 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-jar {
-    dependsOn(clean)
-    copy {
-        from("build/libs/")
-        into("bin/")
+task release(dependsOn: ['clean', 'jar'], type: Copy) {
+    clean {
+        delete("bin", name + "-" + version)
     }
+    from("build/libs/")
+    into("bin/")
 }
+
+
 
 
 tasks.withType(JavaCompile) {
