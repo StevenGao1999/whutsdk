@@ -72,11 +72,20 @@ public class WHUTJwcTest {
     }
 
     @Test
-    public void getBasicStudentInfo() throws IOException{
+    public void getBasicStudentInfo() throws IOException {
         BasicStudentInfo basicStudentInfo = whutJwc.getBasicStudent();
         String s = JSON.toJSONString(basicStudentInfo, SerializerFeature.PrettyFormat);
         log.info(s);
     }
 
+    @Test
+    public void getYXScores() throws IOException {
+        log.info(whutJwc.getYXScores());
+    }
+
+    @Test
+    public void getXFTJ() throws IOException {
+        log.info(whutJwc.getXFTJ());
+    }
 
 }

@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ public class WHUTJwc {
 
     private boolean loggedIn;//是否成功登陆
     private Map<String, String> loginCookies;
+    private Map<String, Map<String, String>> cookiesCache;
 
     public WHUTJwc(String uid, String pswd) {
         this(uid, pswd, 10);
@@ -44,6 +46,7 @@ public class WHUTJwc {
         this.uid = uid;
         this.pswd = pswd;
         loggedIn = false;
+        cookiesCache = new HashMap<String, Map<String, String>>();
     }
 
     /**
@@ -68,6 +71,7 @@ public class WHUTJwc {
 
         if (!body.contains("loginForm")) {
             loginCookies = response.cookies();
+            cookiesCache.clear();
             loggedIn = true;
         }
 
@@ -134,7 +138,7 @@ public class WHUTJwc {
     /**
      * 获取成绩(历史成绩)
      *
-     * @return
+     * @return 历史成绩列表
      * @throws IOException
      */
     public List<Score> getScores() throws IOException {
@@ -166,6 +170,39 @@ public class WHUTJwc {
             scores.add(score);
         }
         return scores;
+    }
+
+
+    /**
+     * 获取有效成绩
+     * 教务处已取消该接口
+     *
+     * @return 有效成绩页面
+     * @throws IOException
+     */
+    @Deprecated
+    public String getYXScores() throws IOException {
+        Map<String, String> certCookies = certificate("http://202.114.90.180/Score/");
+        Connection connection = Jsoup.connect("http://202.114.90.180/Score/yxcjList.do")
+                .cookies(certCookies);
+        Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
+        return response.body();
+    }
+
+    /**
+     * 获取学分统计
+     * 教务处已取消该接口
+     *
+     * @return 学分统计页面
+     * @throws IOException
+     */
+    @Deprecated
+    public String getXFTJ() throws IOException {
+        Map<String, String> certCookies = certificate("http://202.114.90.180/Score/");
+        Connection connection = Jsoup.connect("http://202.114.90.180/Score/xftjList.do")
+                .cookies(certCookies);
+        Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
+        return response.body();
     }
 
     /**
@@ -215,6 +252,11 @@ public class WHUTJwc {
         if (!loggedIn) {
             throw new LoginException();
         }
+
+        if (cookiesCache.containsKey(systemURL)) {
+            return cookiesCache.get(systemURL);
+        }
+
         Connection connection = Jsoup.connect(systemURL)
                 .followRedirects(false)
                 .cookies(loginCookies);
@@ -246,6 +288,9 @@ public class WHUTJwc {
         response = HttpUtil.tryForResponse(connection, tryTimes);
 //        String body = response.body();
 //        log.trace(body);
+
+
+        cookiesCache.put(systemURL, cookies);
         return cookies;
     }
 

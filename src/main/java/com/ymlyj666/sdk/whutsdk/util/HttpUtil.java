@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 
 /**
@@ -28,8 +29,10 @@ public class HttpUtil {
      */
     public static Connection.Response tryForResponse(Connection connection, int tryTimes) throws IOException {
         Connection.Response response;
+        int timeout = 3000;
         for (int i = 0; i < tryTimes; i++) {
-            response = connection.execute();
+            try {
+                response = connection.execute();
 
 //            Map<String, String> cookies = response.cookies();
 //            for (Map.Entry<String, String> entry : cookies.entrySet()) {
@@ -41,8 +44,13 @@ public class HttpUtil {
 //                log.debug(entry.getKey() + "\t=\t" + entry.getValue());
 //            }
 
-            if (response.bodyAsBytes().length != 0 || response.statusCode() != 200) {
-                return response;
+                if (response.bodyAsBytes().length != 0 || response.statusCode() != 200) {
+                    return response;
+                }
+            } catch (SocketTimeoutException e) {
+                log.error("SocketTimeoutException : timeout = " + timeout, e);
+                timeout += 1000;
+                connection.timeout(timeout);
             }
             log.info("Retrying……");
         }
