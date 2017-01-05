@@ -150,6 +150,8 @@ public class WHUTJwc {
                 .cookies(certCookies);
         Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
 
+        log.info(response.body());
+
         Document document = response.parse();
         Elements elements = document.getElementsByAttributeValue("target", "sid_cj_id");
 
@@ -163,10 +165,14 @@ public class WHUTJwc {
             score.setCredit(element.child(4).html());
             score.setScore(element.child(5).html());
             score.setScoreVerifyType(element.child(6).html());
-            score.setExamStatus(element.child(7).html());
-            score.setScoreType(element.child(8).html());
-            score.setIsRevamp(element.child(9).html());
-            score.setGp(element.child(10).html());
+
+            score.setMaxScore(element.child(7).html());
+            score.setFirstScore(element.child(8).html());
+
+            score.setExamStatus(element.child(9).html());
+            score.setScoreType(element.child(10).html());
+            score.setIsRevamp(element.child(11).html());
+            score.setGp(element.child(12).html());
             scores.add(score);
         }
         return scores;

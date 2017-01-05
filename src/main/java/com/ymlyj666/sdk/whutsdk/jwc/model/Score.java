@@ -12,6 +12,8 @@ public class Score {
     private String credit;//学分
     private String score;//总评成绩
     private String scoreVerifyType;//成绩审核属性
+    private String maxScore;//最高成绩
+    private String firstScore;//首次成绩
     private String examStatus;//考试状态
     private String scoreType;//成绩类型
     private String isRevamp;//是否重修
@@ -71,6 +73,22 @@ public class Score {
 
     public void setScoreVerifyType(String scoreVerifyType) {
         this.scoreVerifyType = scoreVerifyType;
+    }
+
+    public String getMaxScore() {
+        return maxScore;
+    }
+
+    public void setMaxScore(String maxScore) {
+        this.maxScore = maxScore;
+    }
+
+    public String getFirstScore() {
+        return firstScore;
+    }
+
+    public void setFirstScore(String firstScore) {
+        this.firstScore = firstScore;
     }
 
     public String getExamStatus() {
