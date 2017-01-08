@@ -217,7 +217,7 @@ public class WHUTJwc {
      * @return
      * @throws IOException
      */
-    public BasicStudentInfo getBasicStudent() throws IOException {
+    public BasicStudentInfo getBasicStudentInfo() throws IOException {
         Map<String, String> certCookies = certificate("http://202.114.90.172:8080/SchoolRoll/");
 
         Connection connection = Jsoup.connect("http://202.114.90.172:8080/SchoolRoll/xjxxList.do")

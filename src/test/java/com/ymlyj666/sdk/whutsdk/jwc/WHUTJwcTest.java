@@ -73,7 +73,7 @@ public class WHUTJwcTest {
 
     @Test
     public void getBasicStudentInfo() throws IOException {
-        BasicStudentInfo basicStudentInfo = whutJwc.getBasicStudent();
+        BasicStudentInfo basicStudentInfo = whutJwc.getBasicStudentInfo();
         String s = JSON.toJSONString(basicStudentInfo, SerializerFeature.PrettyFormat);
         log.info(s);
     }

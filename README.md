@@ -21,7 +21,7 @@ compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'</pre>
     if (whutJwc.login()){
         //success
         //获取学生基本信息
-        BasicStudentInfo basicStudentInfo = whutJwc.getBasicStudent();
+        BasicStudentInfo basicStudentInfo = whutJwc.getBasicStudentInfo();
         //获取课表
         Course[][] courses = whutJwc.getCourses();
         //获取历史成绩
