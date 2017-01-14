@@ -8,6 +8,7 @@ import com.ymlyj666.sdk.whutsdk.exception.LoginException;
 import com.ymlyj666.sdk.whutsdk.jwc.model.BasicStudentInfo;
 import com.ymlyj666.sdk.whutsdk.jwc.model.Course;
 import com.ymlyj666.sdk.whutsdk.jwc.model.Score;
+import com.ymlyj666.sdk.whutsdk.jwc.model.XFTJ;
 import com.ymlyj666.sdk.whutsdk.util.HttpUtil;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -114,14 +115,7 @@ public class WHUTJwc {
      * @throws IOException
      */
     public Course[][] getCourses(String xnxq) throws IOException {
-        Map<String, String> certCookies = certificate("http://202.114.90.180/Course/");
-
-        Connection connection = Jsoup.connect("http://202.114.90.180/Course/grkbList.do")
-                .data("xnxq", xnxq)
-                .cookies(certCookies);
-        Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
-
-        Document document = response.parse();
+        Document document = connectWithCertification("http://202.114.90.180/Course/grkbList.do?xnxq=" + xnxq);
         Course[][] courses = new Course[7][5];
         for (int i = 1; i < 8; i++) {
             for (int j = 0; j < 5; j++) {
@@ -136,25 +130,14 @@ public class WHUTJwc {
     }
 
     /**
-     * 获取成绩(历史成绩)
+     * 获取成绩
      *
-     * @return 历史成绩列表
+     * @return 成绩列表
      * @throws IOException
      */
     public List<Score> getScores() throws IOException {
-        Map<String, String> certCookies = certificate("http://202.114.90.180/Score/");
-
-        Connection connection = Jsoup.connect("http://202.114.90.180/Score/lscjList.do")
-                .data("pageNum", "1")
-                .data("numPerPage", "10000")
-                .cookies(certCookies);
-        Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
-
-        log.info(response.body());
-
-        Document document = response.parse();
+        Document document = connectWithCertification("http://202.114.90.180/Score/lscjList.do?pageNum=1&numPerPage=10000");
         Elements elements = document.getElementsByAttributeValue("target", "sid_cj_id");
-
         List<Score> scores = new ArrayList<Score>();
         for (Element element : elements) {
             Score score = new Score();
@@ -179,21 +162,21 @@ public class WHUTJwc {
     }
 
 
-    /**
-     * 获取有效成绩
-     * 教务处已取消该接口
-     *
-     * @return 有效成绩页面
-     * @throws IOException
-     */
-    @Deprecated
-    public String getYXScores() throws IOException {
-        Map<String, String> certCookies = certificate("http://202.114.90.180/Score/");
-        Connection connection = Jsoup.connect("http://202.114.90.180/Score/yxcjList.do")
-                .cookies(certCookies);
-        Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
-        return response.body();
-    }
+//    /**
+//     * 获取有效成绩
+//     * 教务处已取消该接口
+//     *
+//     * @return 有效成绩页面
+//     * @throws IOException
+//     */
+//    @Deprecated
+//    public String getYXScores() throws IOException {
+//        Map<String, String> certCookies = certificate("http://202.114.90.180/Score/");
+//        Connection connection = Jsoup.connect("http://202.114.90.180/Score/yxcjList.do")
+//                .cookies(certCookies);
+//        Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
+//        return response.body();
+//    }
 
     /**
      * 获取学分统计
@@ -203,12 +186,26 @@ public class WHUTJwc {
      * @throws IOException
      */
     @Deprecated
-    public String getXFTJ() throws IOException {
-        Map<String, String> certCookies = certificate("http://202.114.90.180/Score/");
-        Connection connection = Jsoup.connect("http://202.114.90.180/Score/xftjList.do")
-                .cookies(certCookies);
-        Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
-        return response.body();
+    public XFTJ getXFTJ() throws IOException {
+        Document document = connectWithCertification("http://202.114.90.180/Score/xftjList.do");
+        Elements inputs = document.getElementsByTag("input");
+        Elements rows = document.select("tbody tr");
+        XFTJ xftj = new XFTJ();
+        xftj.setClassRank(inputs.get(0).attr("value"));
+        xftj.setSchoolYearGPA(inputs.get(1).attr("value"));
+        xftj.setFacultyRank(inputs.get(2).attr("value"));
+        xftj.setTotalGPA(inputs.get(3).attr("value"));
+        List<XFTJ.CreditStatus> creditStatuses = new ArrayList<XFTJ.CreditStatus>();
+        for (Element row : rows) {
+            Elements cols = row.getElementsByTag("td");
+            XFTJ.CreditStatus status = new XFTJ.CreditStatus();
+            status.setCourseNature(cols.get(0).html());
+            status.setRequired(cols.get(1).html());
+            status.setAcquired(cols.get(2).html());
+            creditStatuses.add(status);
+        }
+        xftj.setCreditStatuses(creditStatuses);
+        return xftj;
     }
 
     /**
@@ -218,13 +215,7 @@ public class WHUTJwc {
      * @throws IOException
      */
     public BasicStudentInfo getBasicStudentInfo() throws IOException {
-        Map<String, String> certCookies = certificate("http://202.114.90.172:8080/SchoolRoll/");
-
-        Connection connection = Jsoup.connect("http://202.114.90.172:8080/SchoolRoll/xjxxList.do")
-                .cookies(certCookies);
-        Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
-
-        Document document = response.parse();
+        Document document = connectWithCertification("http://202.114.90.172:8080/SchoolRoll/xjxxList.do");
         Elements inputs = document.getElementsByTag("input");
         BasicStudentInfo studentInfo = new BasicStudentInfo();
         studentInfo.setUid(uid);
@@ -298,6 +289,28 @@ public class WHUTJwc {
 
         cookiesCache.put(systemURL, cookies);
         return cookies;
+    }
+
+    /**
+     * 认证后连接
+     *
+     * @param url
+     * @return 连接结果
+     * @throws IOException
+     */
+    private Document connectWithCertification(String url) throws IOException {
+        Connection connection = Jsoup.connect(url);
+        int pQuery = url.indexOf('?');
+        if (pQuery > 0) {//去除Query部分
+            url = url.substring(0, pQuery);
+        }
+        String systemURL = url.substring(0, url.lastIndexOf('/') + 1);
+        log.info("systemURL=" + systemURL);
+        Map<String, String> certCookies = certificate(systemURL);
+        connection.cookies(certCookies);
+        Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
+//        log.info(response.body());
+        return response.parse();
     }
 
     public String getUid() {

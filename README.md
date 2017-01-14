@@ -32,4 +32,12 @@ compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'</pre>
         //error codes here
     }
 ###理工电子身份证
+<!--lang:java-->
+    WHUTID whutId = new WHUTJwc("校园卡号", "密码");
+    if (whutId.login()){
+        //success
+        
+    }else{
+        //error codes here
+    }
 

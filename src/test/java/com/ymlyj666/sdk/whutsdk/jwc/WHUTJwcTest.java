@@ -78,14 +78,15 @@ public class WHUTJwcTest {
         log.info(s);
     }
 
-    @Test
-    public void getYXScores() throws IOException {
-        log.info(whutJwc.getYXScores());
-    }
+//    @Test
+//    public void getYXScores() throws IOException {
+//        log.info(whutJwc.getYXScores());
+//    }
 
     @Test
     public void getXFTJ() throws IOException {
-        log.info(whutJwc.getXFTJ());
+        String s = JSON.toJSONString(whutJwc.getXFTJ(), SerializerFeature.PrettyFormat);
+        log.info(s);
     }
 
 }
