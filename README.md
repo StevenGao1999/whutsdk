@@ -24,8 +24,10 @@ compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'</pre>
         BasicStudentInfo basicStudentInfo = whutJwc.getBasicStudentInfo();
         //获取课表
         Course[][] courses = whutJwc.getCourses();
-        //获取历史成绩
+        //获取成绩
         List<Score> scores = whutJwc.getScores();
+        //获取学分统计（绩点，排名，学分状态）
+        XFTJ xftj = whutjwc.getXFTJ();
         //other codes
         
     }else{

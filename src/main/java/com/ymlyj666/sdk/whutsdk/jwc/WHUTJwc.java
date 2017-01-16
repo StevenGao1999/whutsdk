@@ -161,23 +161,6 @@ public class WHUTJwc {
         return scores;
     }
 
-
-//    /**
-//     * 获取有效成绩
-//     * 教务处已取消该接口
-//     *
-//     * @return 有效成绩页面
-//     * @throws IOException
-//     */
-//    @Deprecated
-//    public String getYXScores() throws IOException {
-//        Map<String, String> certCookies = certificate("http://202.114.90.180/Score/");
-//        Connection connection = Jsoup.connect("http://202.114.90.180/Score/yxcjList.do")
-//                .cookies(certCookies);
-//        Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
-//        return response.body();
-//    }
-
     /**
      * 获取学分统计
      * 教务处已取消该接口
@@ -185,7 +168,6 @@ public class WHUTJwc {
      * @return 学分统计页面
      * @throws IOException
      */
-    @Deprecated
     public XFTJ getXFTJ() throws IOException {
         Document document = connectWithCertification("http://202.114.90.180/Score/xftjList.do");
         Elements inputs = document.getElementsByTag("input");
