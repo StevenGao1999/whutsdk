@@ -8,7 +8,7 @@ public class Course {
     private String time;//上课时间
     private String teacher;//教师
     private String place;//地点
-    private Course nextCourse;//单双周等情况
+    private Course siblingCourse;//单双周等情况
 
     public Course() {
     }
@@ -35,9 +35,9 @@ public class Course {
         }
         String[] cs = html.split("&nbsp;&nbsp;");
         if (cs.length > 1 && cs[1].contains("(")) {
-            nextCourse = new Course(cs[1]);
+            siblingCourse = new Course(cs[1]);
         } else {
-            nextCourse = null;
+            siblingCourse = null;
         }
     }
 
@@ -73,11 +73,11 @@ public class Course {
         this.place = place;
     }
 
-    public Course getNextCourse() {
-        return nextCourse;
+    public Course getSiblingCourse() {
+        return siblingCourse;
     }
 
-    public void setNextCourse(Course nextCourse) {
-        this.nextCourse = nextCourse;
+    public void setSiblingCourse(Course siblingCourse) {
+        this.siblingCourse = siblingCourse;
     }
 }
