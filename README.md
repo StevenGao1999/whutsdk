@@ -8,7 +8,7 @@
 有问题欢迎邮件联系我。
 
 ##使用说明
-1. 导入本项目bin目录中的whutsdk-${版本号}.jar
+1. 导入本项目bin目录中的*whutsdk-${版本号}.jar*
 2. 导入项目依赖:<br>
 <pre>compile group: 'org.jsoup', name: 'jsoup', version: '1.10.1'
 compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'</pre>
@@ -43,3 +43,6 @@ compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'</pre>
         //error codes here
     }
 
+##其它
+非Java环境，欢迎使用 *武汉理工大学相关网站API* :   
+https://github.com/ymlgithub/whutapi
