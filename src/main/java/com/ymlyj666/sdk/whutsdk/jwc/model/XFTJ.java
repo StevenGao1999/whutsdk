@@ -6,10 +6,10 @@ import java.util.List;
  * Created by 19110 on 2017/1/14.
  */
 public class XFTJ {
-    private String classRank;
-    private String facultyRank;
-    private String schoolYearGPA;
-    private String totalGPA;
+    private String classRank;//班级排名（专业课）
+    private String facultyRank;//专业排名（专业课）
+    private String schoolYearGPA;//学年绩点（专业课）
+    private String totalGPA;//入学以来总绩点（专业课）
     private List<CreditStatus> creditStatuses;
 
     public XFTJ() {

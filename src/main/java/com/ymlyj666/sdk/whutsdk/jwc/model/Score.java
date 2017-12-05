@@ -9,6 +9,7 @@ public class Score {
     private String courseId;//课程代码
     private String courseName;//课程名称
     private String courseType;//课程性质
+    private String graduateCourseType;//毕业课程性质
     private String credit;//学分
     private String score;//总评成绩
     private String scoreVerifyType;//成绩审核属性
@@ -49,6 +50,14 @@ public class Score {
 
     public void setCourseType(String courseType) {
         this.courseType = courseType;
+    }
+
+    public String getGraduateCourseType() {
+        return graduateCourseType;
+    }
+
+    public void setGraduateCourseType(String graduateCourseType) {
+        this.graduateCourseType = graduateCourseType;
     }
 
     public String getCredit() {

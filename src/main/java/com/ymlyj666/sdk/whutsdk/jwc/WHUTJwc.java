@@ -137,25 +137,28 @@ public class WHUTJwc {
      */
     public List<Score> getScores() throws IOException {
         Document document = connectWithCertification("http://202.114.90.180/Score/lscjList.do?pageNum=1&numPerPage=10000");
+//        log.info(document.toString());
         Elements elements = document.getElementsByAttributeValue("target", "sid_cj_id");
         List<Score> scores = new ArrayList<Score>();
         for (Element element : elements) {
             Score score = new Score();
-            score.setTerm(element.child(0).html());
-            score.setCourseId(element.child(1).html());
-            score.setCourseName(element.child(2).html());
-            score.setCourseType(element.child(3).html());
-            score.setCredit(element.child(4).html());
-            score.setScore(element.child(5).html());
-            score.setScoreVerifyType(element.child(6).html());
+            int i = 0;
+            score.setTerm(element.child(i++).html());
+            score.setCourseId(element.child(i++).html());
+            score.setCourseName(element.child(i++).html());
+            score.setCourseType(element.child(i++).html());
+            score.setGraduateCourseType(element.child(i++).html());
+            score.setCredit(element.child(i++).html());
+            score.setScore(element.child(i++).html());
+            score.setScoreVerifyType(element.child(i++).html());
 
-            score.setMaxScore(element.child(7).html());
-            score.setFirstScore(element.child(8).html());
+            score.setMaxScore(element.child(i++).html());
+            score.setFirstScore(element.child(i++).html());
 
-            score.setExamStatus(element.child(9).html());
-            score.setScoreType(element.child(10).html());
-            score.setIsRevamp(element.child(11).html());
-            score.setGp(element.child(12).html());
+            score.setExamStatus(element.child(i++).html());
+            score.setScoreType(element.child(i++).html());
+            score.setIsRevamp(element.child(i++).html());
+            score.setGp(element.child(i++).html());
             scores.add(score);
         }
         return scores;
@@ -163,7 +166,6 @@ public class WHUTJwc {
 
     /**
      * 获取学分统计
-     * 教务处已取消该接口
      *
      * @return 学分统计页面
      * @throws IOException
@@ -197,7 +199,7 @@ public class WHUTJwc {
      * @throws IOException
      */
     public BasicStudentInfo getBasicStudentInfo() throws IOException {
-        Document document = connectWithCertification("http://202.114.90.172:8080/SchoolRoll/xjxxList.do");
+        Document document = connectWithCertification("http://202.114.90.180/SchoolRoll/xjxxList.do");
         Elements inputs = document.getElementsByTag("input");
         BasicStudentInfo studentInfo = new BasicStudentInfo();
         studentInfo.setUid(uid);
@@ -268,6 +270,13 @@ public class WHUTJwc {
 //        String body = response.body();
 //        log.trace(body);
 
+        if (systemURL.endsWith("/Score/")) {
+//            log.info(response.body());
+            Document document = response.parse();
+            String url = document.select("[href*=snkey]").attr("href");
+            String snkey = url.substring(url.lastIndexOf("=") + 1);
+            cookies.put("snkey", snkey);
+        }
 
         cookiesCache.put(systemURL, cookies);
         return cookies;
@@ -290,6 +299,9 @@ public class WHUTJwc {
         log.info("systemURL=" + systemURL);
         Map<String, String> certCookies = certificate(systemURL);
         connection.cookies(certCookies);
+        if (systemURL.endsWith("/Score/")) {
+            connection.data("snkey", certCookies.get("snkey"));
+        }
         Connection.Response response = HttpUtil.tryForResponse(connection, tryTimes);
 //        log.info(response.body());
         return response.parse();

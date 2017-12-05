@@ -62,12 +62,12 @@ public class WHUTID {
         Element ssoticketidElement = document.getElementById("ssoticketid");
         if (ssoticketidElement != null) {
             String ssoticketid = ssoticketidElement.attr("value");
-            log.info("ssoticketid = " + ssoticketid);
+//            log.info("ssoticketid = " + ssoticketid);
 
             connection = Jsoup.connect("http://my.whut.edu.cn/c/portal/login")
                     .data("ssoticketid", ssoticketid);
             response = HttpUtil.tryForResponse(connection, tryTimes);
-            log.info(response.body());
+//            log.info(response.body());
 
             loginCookies = response.cookies();
             loggedIn = true;
